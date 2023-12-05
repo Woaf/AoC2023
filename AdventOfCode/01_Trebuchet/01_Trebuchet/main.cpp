@@ -17,7 +17,7 @@ using cStrArray = const std::vector<std::string>;
 static cStrArray NumberStrs = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero"};
 
 
-struct ParseData
+struct ParsedLineData
 {
 	std::optional<size_t> dataPosition;
 	int32_t data = 0;
@@ -77,7 +77,7 @@ static int32_t SelectNumFromString(const std::string& iNumberStr)
 
 int32_t ParseLine_Str(const std::string& iLine)
 {
-	ParseData numDataForward;
+	ParsedLineData numDataForward;
 	for (size_t i = 0; i < iLine.length(); ++i)
 	{
 		if (std::isdigit(iLine.at(i)))
@@ -88,7 +88,7 @@ int32_t ParseLine_Str(const std::string& iLine)
 		}
 	}
 
-	ParseData strDataForward;
+	ParsedLineData strDataForward;
 	for (const std::string& strNum : NumberStrs)
 	{
 		const size_t dataPos = iLine.find(strNum);
@@ -100,7 +100,7 @@ int32_t ParseLine_Str(const std::string& iLine)
 		}
 	}
 
-	ParseData numDataReverse;
+	ParsedLineData numDataReverse;
 	for (int32_t i = iLine.length() - 1; i >= 0; --i)
 	{
 		if (std::isdigit(iLine.at(i)))
@@ -111,7 +111,7 @@ int32_t ParseLine_Str(const std::string& iLine)
 		}
 	}
 
-	ParseData strDataReverse;
+	ParsedLineData strDataReverse;
 	for (const std::string& strNum : NumberStrs)
 	{
 		const size_t dataPos = iLine.rfind(strNum);
@@ -197,9 +197,7 @@ IntArray GetCalibrationValues()
 	std::string line;
 	while (std::getline(infile, line))
 	{
-		const int32_t parsedLineData = ParseLine_Str(line);
-		std::cout << "data: " << parsedLineData << std::endl;
-		results.emplace_back(parsedLineData);
+		results.emplace_back(ParseLine_Str(line));
 	}
 	return results;
 }
